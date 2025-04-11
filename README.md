@@ -1,206 +1,216 @@
-# 🚀 Cursor MCP Server Guide
+# 🚀 Cursor GitHub MCP Setup Guide for macOS
 
-A comprehensive guide to understanding and setting up MCP (Model Control Protocol) server with Cursor IDE, including GitHub integration and AI agent configuration.
+A focused guide on setting up GitHub MCP integration with Cursor IDE on macOS, including step-by-step installation and configuration instructions.
 
-## 📚 Table of Contents
+## 📋 Prerequisites
 
-- [What is Cursor?](#what-is-cursor)
-- [What is MCP Server?](#what-is-mcp-server)
-- [Installation & Setup](#installation--setup)
-- [GitHub Integration](#github-integration)
-- [Using AI Agents](#using-ai-agents)
-- [Troubleshooting](#troubleshooting)
+- macOS operating system
+- Node.js and npm installed
+- GitHub account with personal access token
+- Cursor IDE installed
 
-## 🎯 What is Cursor?
+## 🛠️ Installation Steps
 
-Cursor is a modern, AI-native IDE that enhances your coding experience with:
+### 1. Install Cursor on macOS
 
-- 🤖 Built-in AI assistance
-- ⚡ Fast and responsive interface
-- 🔍 Intelligent code navigation
-- 🛠️ Advanced editing features
-- 🤝 Seamless AI pair programming
-
-Cursor combines the power of VS Code with advanced AI capabilities, making it an ideal choice for developers who want to leverage AI in their workflow.
-
-## 🌐 What is MCP Server?
-
-MCP (Model Control Protocol) server is a crucial component that:
-
-1. **Manages AI Models**: Controls how AI models are loaded and used
-2. **Handles Requests**: Processes AI-related requests from Cursor
-3. **Provides APIs**: Offers standardized interfaces for AI operations
-4. **Manages Resources**: Optimizes model usage and performance
-
-Key features:
-- Model management and caching
-- Request routing and load balancing
-- API versioning and compatibility
-- Security and access control
-
-## 🛠️ Installation & Setup
-
-### 1. Install Cursor
 ```bash
-# macOS
+# Using Homebrew
 brew install cursor
-
-# Windows
-winget install cursor
-
-# Linux
-curl -fsSL https://cursor.sh/install.sh | bash
 ```
 
-### 2. Install Smithery CLI and GitHub Integration
+### 2. Install GitHub MCP Integration
+
 ```bash
-# Install Smithery CLI
+# Install Smithery CLI with GitHub integration
 npx -y @smithery/cli@latest install @smithery-ai/github \
   --client cursor \
   --config '{"githubPersonalAccessToken":"your_token_here"}'
 ```
 
-### 3. Configure GitHub Personal Access Token
-1. Go to GitHub Settings → Developer settings → Personal access tokens
-2. Generate a new token with required scopes:
-   - repo
-   - read:org
-   - read:user
-   - user:email
+### 3. Configure MCP in Cursor
 
-### 4. Configure Cursor Settings
-1. Open Cursor Settings (⌘/Ctrl + ,)
-2. Navigate to Extensions → MCP Configuration
-3. Add your configuration:
+The MCP configuration file is located at:
+```
+~/.cursor/mcp.json
+```
+
+Example configuration:
 ```json
 {
-  "mcp": {
-    "server": "https://your-mcp-server",
-    "token": "your_access_token",
-    "models": {
-      "default": "claude-3-sonnet",
-      "fallback": "gpt-3.5-turbo"
-    }
+  "github": {
+    "personalAccessToken": "your_token_here"
   }
 }
 ```
 
-## 🔗 GitHub Integration
+## 🖥️ Cursor Interface Layout
 
-The GitHub integration enables:
+After installation, you'll see the following changes in your Cursor IDE:
 
-1. **Repository Access**
-   - Clone repositories
-   - Create/delete repositories
-   - Manage branches and PRs
+1. **Command Palette** (⌘ + Shift + P)
+   - New GitHub commands available
+   - MCP-related commands listed
 
-2. **Code Search**
-   ```javascript
-   // Example MCP GitHub search
-   await mcp.github.searchCode({
-     query: "language:javascript function",
-     owner: "your-org",
-     repo: "your-repo"
-   });
+2. **Sidebar**
+   - GitHub icon in the activity bar
+   - Repository explorer
+   - Pull request viewer
+
+3. **Status Bar**
+   - MCP connection status
+   - Current GitHub context
+
+## 🔑 GitHub Personal Access Token Setup
+
+1. Go to GitHub Settings:
+   - Profile picture → Settings → Developer settings → Personal access tokens → Tokens (classic)
+
+2. Required token permissions:
+   ```
+   repo            ✓ Full control of private repositories
+   read:org        ✓ Read org and team information
+   read:user       ✓ Read user information
+   user:email      ✓ Access user email addresses
    ```
 
-3. **File Operations**
-   ```javascript
-   // Example file creation
-   await mcp.github.createFile({
-     owner: "your-org",
-     repo: "your-repo",
-     path: "src/example.js",
-     content: "console.log('Hello MCP!')",
-     message: "Add example file"
-   });
-   ```
+## 🛠️ Available GitHub MCP Features
 
-## 🤖 Using AI Agents
-
-MCP server supports various AI agents:
-
-1. **Code Completion**
-   - Real-time suggestions
-   - Context-aware completions
-   - Multi-line code generation
-
-2. **Code Analysis**
-   - Bug detection
-   - Performance optimization
-   - Security vulnerability scanning
-
-3. **Natural Language Processing**
-   - Command interpretation
-   - Documentation generation
-   - Code explanation
-
-Example usage:
+### 1. Repository Management
 ```javascript
-// Using AI agent for code generation
-const response = await cursor.chat.sendMessage({
-  message: "Create a React component for a login form",
-  context: {
-    language: "javascript",
-    framework: "react"
-  }
+// Create a new repository
+mcp.github.createRepository({
+  name: "my-new-repo",
+  description: "Repository created via MCP",
+  private: false
+});
+
+// Delete a repository
+mcp.github.deleteRepository({
+  owner: "username",
+  repo: "repo-name"
 });
 ```
 
-## 🔧 Troubleshooting
+### 2. File Operations
+```javascript
+// Create or update file
+mcp.github.createOrUpdateFile({
+  owner: "username",
+  repo: "repo-name",
+  path: "path/to/file",
+  content: "file content",
+  message: "commit message"
+});
 
-Common issues and solutions:
+// Get file contents
+mcp.github.getFileContents({
+  owner: "username",
+  repo: "repo-name",
+  path: "path/to/file"
+});
+```
 
-1. **Connection Issues**
-   ```bash
-   # Check MCP server status
-   curl -I https://your-mcp-server/health
-   
-   # Verify network connectivity
-   ping your-mcp-server
-   ```
+### 3. Repository Search
+```javascript
+// Search repositories
+mcp.github.searchRepositories({
+  query: "language:javascript stars:>1000"
+});
 
-2. **Authentication Errors**
-   - Verify token validity
-   - Check token permissions
-   - Ensure correct token format
+// Search code
+mcp.github.searchCode({
+  query: "filename:README.md"
+});
+```
 
-3. **Performance Issues**
-   - Check server resources
-   - Monitor model usage
-   - Optimize request patterns
+### 4. Issue and PR Management
+```javascript
+// Create an issue
+mcp.github.createIssue({
+  owner: "username",
+  repo: "repo-name",
+  title: "Issue title",
+  body: "Issue description"
+});
 
-## 🔑 Best Practices
+// Create a pull request
+mcp.github.createPullRequest({
+  owner: "username",
+  repo: "repo-name",
+  title: "PR title",
+  head: "feature-branch",
+  base: "main"
+});
+```
 
-1. **Security**
-   - Rotate tokens regularly
-   - Use environment variables
-   - Implement rate limiting
+## 🔍 Verifying Installation
 
-2. **Performance**
-   - Cache frequently used models
-   - Batch similar requests
-   - Use appropriate model sizes
+1. Check MCP Status:
+```bash
+# View MCP configuration
+cat ~/.cursor/mcp.json
 
-3. **Development**
-   - Follow API versioning
-   - Implement error handling
-   - Monitor resource usage
+# Check Smithery installation
+npx @smithery/cli@latest list
+```
 
-## 📚 Additional Resources
+2. Test GitHub Integration:
+```bash
+# In Cursor's command palette (⌘ + Shift + P):
+> GitHub: View Repository
+```
 
-- [Cursor Documentation](https://cursor.sh/docs)
-- [MCP Server API Reference](https://mcp.dev/docs)
-- [GitHub API Documentation](https://docs.github.com/en/rest)
-- [Smithery CLI Guide](https://smithery.dev/docs)
+## 🚨 Troubleshooting
 
-## 🤝 Contributing
+1. **Token Issues**
+```bash
+# Regenerate token and update configuration
+npx -y @smithery/cli@latest install @smithery-ai/github \
+  --client cursor \
+  --config '{"githubPersonalAccessToken":"new_token_here"}'
+```
 
-Feel free to contribute to this guide by:
-1. Opening issues for questions or problems
-2. Submitting pull requests with improvements
-3. Sharing your experiences and best practices
+2. **Connection Issues**
+```bash
+# Reset MCP configuration
+rm ~/.cursor/mcp.json
+# Then reinstall GitHub integration
+```
+
+3. **Common Error Messages**:
+   - `Authentication failed`: Check your token
+   - `Connection refused`: Restart Cursor
+   - `Resource not found`: Verify repository access
+
+## 📝 Tips for Daily Use
+
+1. **Quick Commands**:
+   - ⌘ + Shift + P: Open command palette
+   - Type 'GitHub' to see all available commands
+
+2. **Keyboard Shortcuts**:
+   - ⌘ + K G: Open GitHub view
+   - ⌘ + K P: Open pull requests
+   - ⌘ + K I: Open issues
+
+3. **Best Practices**:
+   - Keep your token secure
+   - Use environment variables when possible
+   - Regularly update Cursor and MCP
+
+## 🔄 Updating
+
+To update the GitHub MCP integration:
+```bash
+npx -y @smithery/cli@latest update @smithery-ai/github
+```
+
+## 🆘 Getting Help
+
+- Visit [Cursor Documentation](https://cursor.sh/docs)
+- Join [Cursor Discord](https://discord.gg/cursor)
+- Check [GitHub Status](https://www.githubstatus.com/)
 
 ## 📄 License
 
-This guide is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This guide is licensed under the MIT License.
