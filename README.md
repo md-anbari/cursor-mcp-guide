@@ -131,19 +131,3 @@ Once installed, you can use GitHub MCP to:
 3. Search through code
 4. Manage files and branches
 5. Collaborate with team members
-
-## Security Note
-
-Always keep your GitHub Personal Access Token secure and never share it publicly.
-
-## Contributing
-
-Feel free to contribute to this guide by:
-1. Reporting issues
-2. Suggesting improvements
-3. Adding examples
-4. Sharing configurations
-
-## License
-
-This guide is licensed under the MIT License.
